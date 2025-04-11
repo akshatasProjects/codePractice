@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scroll Progress Bar</title>
+    <style>
+      body {
+        height: 3000px;
+        margin: 0;
+      }
+      #progressBar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 6px;
+        background: #4caf50;
+        width: 0%;
+        z-index: 1000;
+        transition: width 0.1s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progressBar"></div>
+    <h1>Throttle function above applied</h1>
+    <script>
+      // Throttle function
+      function throttle(fn, delay) {
+        let lastCall = 0;
+        return function (...args) {
+          const now = Date.now();
+          if (now - lastCall >= delay) {
+            fn.apply(this, args);
+            lastCall = now;
+          }
+        };
+      }
+
+      // Scroll progress logic
+      function updateProgressBar() {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        document.getElementById("progressBar").style.width =
+          scrollPercent + "%";
+      }
+
+      // Attach throttled scroll event
+      window.addEventListener("scroll", throttle(updateProgressBar, 100));
+    </script>
+  </body>
+</html>
